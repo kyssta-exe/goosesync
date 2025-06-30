@@ -1,0 +1,22 @@
+name: GooseSync
+version: 1.0.0
+main: me.kyssta.goosesync.GooseSync
+api-version: '1.16'
+author: Kyssta
+description: Improves gameplay experience for high-ping players
+
+commands:
+  gs:
+    description: Main GooseSync command
+    usage: /<command> [help|version|reload]
+    aliases: [goosesync]
+    permission: goosesync.use
+    permission-message: You don't have permission to use this command!
+
+permissions:
+  goosesync.use:
+    description: Allows use of basic GooseSync commands
+    default: true
+  goosesync.reload:
+    description: Allows reloading of GooseSync configuration
+    default: op

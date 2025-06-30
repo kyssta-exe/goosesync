@@ -1,0 +1,13 @@
+me\kyssta\goosesync\listener\CombatListener.class
+me\kyssta\goosesync\util\KnockbackUtil.class
+me\kyssta\goosesync\command\GooseSyncCommand.class
+me\kyssta\goosesync\task\PingUpdateTask.class
+me\kyssta\goosesync\listener\PearlListener.class
+me\kyssta\goosesync\manager\PlayerDataManager.class
+me\kyssta\goosesync\config\ConfigManager.class
+me\kyssta\goosesync\model\PlayerData.class
+me\kyssta\goosesync\listener\PotionListener.class
+me\kyssta\goosesync\GooseSync.class
+me\kyssta\goosesync\util\VersionUtil.class
+me\kyssta\goosesync\listener\ConsumptionListener.class
+me\kyssta\goosesync\listener\PlayerConnectionListener.class

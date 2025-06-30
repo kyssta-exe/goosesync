@@ -1,0 +1,12 @@
+enabled: true
+ping-threshold: 50
+knockback-multiplier: 1.0
+consumption:
+  enabled: true
+  delay-reduction: 0.2
+pearl:
+  enabled: true
+  cooldown-reduction: 0.2
+potions:
+  enabled: true
+  throw-delay-reduction: 0.2
