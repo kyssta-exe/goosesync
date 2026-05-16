@@ -2,7 +2,7 @@
 
 > **The Ultimate Solution for High-Ping Players on Minecraft Servers**
 
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%201.21.x-brightgreen.svg)](https://www.minecraft.net/)
+[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%201.21.2-brightgreen.svg)](https://www.minecraft.net/)
 [![Java Version](https://img.shields.io/badge/Java-8+-orange.svg)](https://adoptium.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -41,7 +41,7 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 ## 🚀 Installation
 
 ### Prerequisites
-- **Minecraft Server**: 1.16.x - 1.21.x (Spigot, Paper, Purpur, or any Bukkit-based server)
+- **Minecraft Server**: 1.16.x - 1.21.2 (Spigot, Paper, Purpur, or any Bukkit-based server)
 - **Java**: Version 8 or higher (Java 17+ recommended for optimal performance)
 - **Permissions**: Server restart capability
 
@@ -49,13 +49,13 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 
 1. **Download the Plugin**
    ```bash
-   # Download goosesync-1.0.0.jar from the releases
+   # Download goosesync-26.1.2.jar from the releases
    ```
 
 2. **Install on Your Server**
    ```bash
    # Place the JAR file in your plugins folder
-   cp goosesync-1.0.0.jar /path/to/your/server/plugins/
+   cp goosesync-26.1.2.jar /path/to/your/server/plugins/
    ```
 
 3. **Start Your Server**
@@ -67,7 +67,7 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 4. **Verify Installation**
    ```
    [INFO] GooseSync has been enabled successfully!
-   [INFO] Compatible with Minecraft versions 1.16 - 1.21.x
+   [INFO] Compatible with Minecraft versions 1.16 - 1.21.2
    ```
 
 ## ⚙️ Configuration
@@ -116,6 +116,7 @@ potions:
 | `/gs` or `/goosesync` | Show plugin information | `goosesync.use` |
 | `/gs help` | Display help menu | `goosesync.use` |
 | `/gs version` | Show version details | `goosesync.use` |
+| `/gs status` | Show live config/status | `goosesync.status` |
 
 ### Admin Commands
 | Command | Description | Permission |
@@ -129,7 +130,7 @@ potions:
 ║              GooseSync              ║
 ╠══════════════════════════════════════════╣
 ║  A Plugin to fix all the latency issues!  ║
-║  Version: 1.0.0                    ║
+║  Version: 26.1.2                   ║
 ║  Made by Kyssta!                        ║
 ║  Kyssta Network: kyssta.xyz        ║
 ║  Server Version: 1_21_R0           ║
@@ -186,7 +187,7 @@ permissions:
 | 1.18.x | ✅ Full Support | Performance optimizations |
 | 1.19.x | ✅ Full Support | All features |
 | 1.20.x | ✅ Full Support | New combat system |
-| 1.21.x | ✅ Full Support | Latest optimizations |
+| 1.21 - 1.21.2 | ✅ Full Support | Latest optimizations |
 
 ## 🛠️ Troubleshooting
 
@@ -222,7 +223,7 @@ debug: true
 The plugin provides detailed logging:
 ```
 [INFO] GooseSync has been enabled successfully!
-[INFO] Compatible with Minecraft versions 1.16 - 1.21.x
+[INFO] Compatible with Minecraft versions 1.16 - 1.21.2
 [INFO] Detected server version: 1_21_R0
 ```
 
@@ -281,7 +282,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Developed by:** Kyssta  
 **Website:** [kyssta.xyz](https://kyssta.xyz)  
-**Version:** 1.0.0
+**Version:** 26.1.2
 
 ---
 

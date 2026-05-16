@@ -1,7 +1,5 @@
 package me.kyssta.goosesync.model;
 
-import org.bukkit.util.Vector;
-
 public class PlayerData {
     private final String playerName;
     private int ping;
@@ -79,5 +77,17 @@ public class PlayerData {
 
     public boolean isOnGround(double y) {
         return Math.abs(y) < 0.005;
+    }
+
+    public boolean hasElapsed(Integer previousTick, int currentTick, int requiredTicks) {
+        return previousTick == null || currentTick - previousTick >= requiredTicks;
+    }
+
+    public boolean isWithinTicks(Integer previousTick, int currentTick, int maxTicks) {
+        return previousTick != null && currentTick - previousTick <= maxTicks;
+    }
+
+    public boolean shouldCompensate(int threshold) {
+        return compensationEnabled && ping >= threshold;
     }
 }

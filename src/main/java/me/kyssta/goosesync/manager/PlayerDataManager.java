@@ -1,6 +1,7 @@
 package me.kyssta.goosesync.manager;
 
 import me.kyssta.goosesync.model.PlayerData;
+import me.kyssta.goosesync.util.VersionUtil;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -18,8 +19,17 @@ public class PlayerDataManager {
         return playerDataMap.get(uuid);
     }
 
+    public PlayerData getOrCreatePlayerData(Player player) {
+        PlayerData data = playerDataMap.get(player.getUniqueId());
+        if (data == null) {
+            data = new PlayerData(player.getName());
+            playerDataMap.put(player.getUniqueId(), data);
+        }
+        return data;
+    }
+
     public void createPlayerData(Player player) {
-        playerDataMap.put(player.getUniqueId(), new PlayerData(player.getName()));
+        getOrCreatePlayerData(player);
     }
 
     public void removePlayerData(UUID uuid) {
@@ -28,8 +38,10 @@ public class PlayerDataManager {
 
     public void updatePlayerPing(Player player) {
         PlayerData data = getPlayerData(player.getUniqueId());
-        if (data != null) {
-            data.setPing(player.getPing());
-        }
+        getOrCreatePlayerData(player).setPing(VersionUtil.getPing(player));
+    }
+
+    public int getTrackedPlayerCount() {
+        return playerDataMap.size();
     }
 }

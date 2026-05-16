@@ -24,9 +24,9 @@ public class ConsumptionListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player.getUniqueId());
+        PlayerData playerData = plugin.getPlayerDataManager().getOrCreatePlayerData(player);
 
-        if (playerData == null || playerData.getPing() < plugin.getConfigManager().getPingThreshold()) {
+        if (!playerData.shouldCompensate(plugin.getConfigManager().getPingThreshold())) {
             return;
         }
 
@@ -34,12 +34,12 @@ public class ConsumptionListener implements Listener {
 
         if (VersionUtil.isGoldenApple(item) || VersionUtil.isCookedBeef(item)) {
             Integer lastConsumeTicks = playerData.getLastConsumeTicks();
-            if (lastConsumeTicks != null && lastConsumeTicks > 8) {
+            if (!playerData.hasElapsed(lastConsumeTicks, player.getTicksLived(), 8)) {
                 return;
             }
             
             // Apply consumption speed boost for high ping players
-            player.setFoodLevel(player.getFoodLevel() + 1);
+            player.setFoodLevel(Math.min(20, player.getFoodLevel() + 1));
             playerData.setLastConsumeTicks(player.getTicksLived());
         }
     }

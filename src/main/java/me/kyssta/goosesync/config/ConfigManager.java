@@ -14,6 +14,7 @@ public class ConfigManager {
     private double pearlCooldownReduction;
     private boolean potionsEnabled;
     private double potionThrowDelayReduction;
+    private boolean debugEnabled;
 
     public ConfigManager(GooseSync plugin) {
         this.plugin = plugin;
@@ -25,17 +26,22 @@ public class ConfigManager {
         FileConfiguration config = plugin.getConfig();
         
         this.enabled = config.getBoolean("enabled", true);
-        this.pingThreshold = config.getInt("ping-threshold", 100);
-        this.knockbackMultiplier = config.getDouble("knockback-multiplier", 0.8);
+        this.pingThreshold = Math.max(0, config.getInt("ping-threshold", 100));
+        this.knockbackMultiplier = clamp(config.getDouble("knockback-multiplier", 0.8), 0.0, 2.0);
         
         this.consumptionEnabled = config.getBoolean("consumption.enabled", true);
-        this.consumptionDelayReduction = config.getDouble("consumption.delay-reduction", 0.2);
+        this.consumptionDelayReduction = clamp(config.getDouble("consumption.delay-reduction", 0.2), 0.0, 0.9);
         
         this.pearlEnabled = config.getBoolean("pearl.enabled", true);
-        this.pearlCooldownReduction = config.getDouble("pearl.cooldown-reduction", 0.2);
+        this.pearlCooldownReduction = clamp(config.getDouble("pearl.cooldown-reduction", 0.2), 0.0, 0.9);
         
         this.potionsEnabled = config.getBoolean("potions.enabled", true);
-        this.potionThrowDelayReduction = config.getDouble("potions.throw-delay-reduction", 0.2);
+        this.potionThrowDelayReduction = clamp(config.getDouble("potions.throw-delay-reduction", 0.2), 0.0, 0.9);
+        this.debugEnabled = config.getBoolean("debug", false);
+    }
+
+    private double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     public boolean isEnabled() {
@@ -72,5 +78,9 @@ public class ConfigManager {
 
     public double getPotionThrowDelayReduction() {
         return potionThrowDelayReduction;
+    }
+
+    public boolean isDebugEnabled() {
+        return debugEnabled;
     }
 }

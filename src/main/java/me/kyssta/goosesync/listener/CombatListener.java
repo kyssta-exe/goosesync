@@ -32,7 +32,8 @@ public class CombatListener implements Listener {
             return;
         }
 
-        if (entityDamageEvent.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+        if (entityDamageEvent.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK
+                || !(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
             return;
         }
 
@@ -41,17 +42,13 @@ public class CombatListener implements Listener {
             return;
         }
 
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(victim.getUniqueId());
-        if (playerData == null || !playerData.isCompensationEnabled()) {
-            return;
-        }
-
-        if (playerData.getPing() < plugin.getConfigManager().getPingThreshold()) {
+        PlayerData playerData = plugin.getPlayerDataManager().getOrCreatePlayerData(victim);
+        if (!playerData.shouldCompensate(plugin.getConfigManager().getPingThreshold())) {
             return;
         }
 
         Integer damageTicks = playerData.getLastDamageTicks();
-        if (damageTicks != null && damageTicks > 8) {
+        if (!playerData.isWithinTicks(damageTicks, victim.getTicksLived(), 8)) {
             return;
         }
 
@@ -82,10 +79,7 @@ public class CombatListener implements Listener {
         
         Player victim = (Player) entity;
 
-        PlayerData victimData = plugin.getPlayerDataManager().getPlayerData(victim.getUniqueId());
-        if (victimData == null) {
-            return;
-        }
+        PlayerData victimData = plugin.getPlayerDataManager().getOrCreatePlayerData(victim);
 
         victimData.setLastDamageTicks(victim.getTicksLived());
         victimData.setVerticalVelocity(victim.getVelocity().getY());

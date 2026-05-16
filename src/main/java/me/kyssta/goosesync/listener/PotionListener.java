@@ -35,14 +35,14 @@ public class PotionListener implements Listener {
             return;
         }
 
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player.getUniqueId());
+        PlayerData playerData = plugin.getPlayerDataManager().getOrCreatePlayerData(player);
 
-        if (playerData == null || playerData.getPing() < plugin.getConfigManager().getPingThreshold()) {
+        if (!playerData.shouldCompensate(plugin.getConfigManager().getPingThreshold())) {
             return;
         }
 
         Integer lastPotionTicks = playerData.getLastPotionTicks();
-        if (lastPotionTicks != null && lastPotionTicks > 8) {
+        if (!playerData.hasElapsed(lastPotionTicks, player.getTicksLived(), 8)) {
             return;
         }
 

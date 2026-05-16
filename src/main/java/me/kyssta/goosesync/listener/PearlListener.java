@@ -28,14 +28,14 @@ public class PearlListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player.getUniqueId());
+        PlayerData playerData = plugin.getPlayerDataManager().getOrCreatePlayerData(player);
 
-        if (playerData == null || playerData.getPing() < plugin.getConfigManager().getPingThreshold()) {
+        if (!playerData.shouldCompensate(plugin.getConfigManager().getPingThreshold())) {
             return;
         }
 
         Integer lastPearlTicks = playerData.getLastPearlTicks();
-        if (lastPearlTicks != null && lastPearlTicks > 8) {
+        if (!playerData.hasElapsed(lastPearlTicks, player.getTicksLived(), 8)) {
             return;
         }
 

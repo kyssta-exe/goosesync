@@ -6,6 +6,7 @@ import me.kyssta.goosesync.listener.*;
 import me.kyssta.goosesync.manager.PlayerDataManager;
 import me.kyssta.goosesync.task.PingUpdateTask;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GooseSync extends JavaPlugin {
@@ -33,8 +34,12 @@ public class GooseSync extends JavaPlugin {
         this.configManager = new ConfigManager(this);
         this.playerDataManager = new PlayerDataManager();
 
-        // Register commands
-        getCommand("gs").setExecutor(new GooseSyncCommand(this));
+        GooseSyncCommand gooseSyncCommand = new GooseSyncCommand(this);
+        PluginCommand command = getCommand("gs");
+        if (command != null) {
+            command.setExecutor(gooseSyncCommand);
+            command.setTabCompleter(gooseSyncCommand);
+        }
 
         // Register listeners
         getServer().getPluginManager().registerEvents(new CombatListener(this), this);
@@ -47,7 +52,7 @@ public class GooseSync extends JavaPlugin {
         new PingUpdateTask(this).runTaskTimer(this, 20L, 20L);
 
         getLogger().info("GooseSync has been enabled successfully!");
-        getLogger().info("Compatible with Minecraft versions 1.16 - 1.21.x");
+        getLogger().info("Compatible with Minecraft versions 1.16 - 1.21.2");
     }
 
     @Override

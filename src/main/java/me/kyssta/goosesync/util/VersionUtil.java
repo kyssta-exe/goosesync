@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Method;
+
 /**
  * Utility class for handling version-specific compatibility
  */
@@ -37,20 +39,14 @@ public class VersionUtil {
      * Check if an item is a splash potion (version-safe)
      */
     public static boolean isSplashPotion(ItemStack item) {
-        if (item == null) return false;
-        
-        String itemType = item.getType().toString();
-        return itemType.contains("SPLASH_POTION");
+        return item != null && item.getType() == Material.SPLASH_POTION;
     }
     
     /**
      * Check if an item is a golden apple (version-safe)
      */
     public static boolean isGoldenApple(ItemStack item) {
-        if (item == null) return false;
-        
-        String itemType = item.getType().toString();
-        return itemType.contains("GOLDEN_APPLE");
+        return item != null && (item.getType() == Material.GOLDEN_APPLE || item.getType() == Material.ENCHANTED_GOLDEN_APPLE);
     }
     
     /**
@@ -78,6 +74,31 @@ public class VersionUtil {
         if (supportsFeature(GooseSync.getInstance(), "cooldown_api")) {
             return player.getCooldown(material);
         }
+        return 0;
+    }
+
+    public static int getPing(Player player) {
+        try {
+            Method getPing = player.getClass().getMethod("getPing");
+            Object ping = getPing.invoke(player);
+            if (ping instanceof Integer) {
+                return Math.max(0, (Integer) ping);
+            }
+        } catch (ReflectiveOperationException ignored) {
+            // Older servers expose ping through Player.Spigot.
+        }
+
+        try {
+            Object spigot = player.getClass().getMethod("spigot").invoke(player);
+            Method getPing = spigot.getClass().getMethod("getPing");
+            Object ping = getPing.invoke(spigot);
+            if (ping instanceof Integer) {
+                return Math.max(0, (Integer) ping);
+            }
+        } catch (ReflectiveOperationException ignored) {
+            return 0;
+        }
+
         return 0;
     }
 } 

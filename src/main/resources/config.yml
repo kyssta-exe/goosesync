@@ -1,6 +1,6 @@
 enabled: true
-ping-threshold: 50
-knockback-multiplier: 1.0
+ping-threshold: 100
+knockback-multiplier: 0.8
 consumption:
   enabled: true
   delay-reduction: 0.2
@@ -10,3 +10,4 @@ pearl:
 potions:
   enabled: true
   throw-delay-reduction: 0.2
+debug: false
