@@ -51,3 +51,48 @@ jobs:
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to Modrinth
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        MODRINTH_PROJECT_ID: ${{ secrets.MODRINTH_PROJECT_ID }}
+      run: |
+        if [ -z "$MODRINTH_TOKEN" ] || [ -z "$MODRINTH_PROJECT_ID" ]; then
+          echo "Missing MODRINTH_TOKEN or MODRINTH_PROJECT_ID secret."
+          exit 1
+        fi
+
+        VERSION="${GITHUB_REF_NAME#v}"
+        JAR="target/goosesync-${VERSION}.jar"
+
+        if [ ! -f "$JAR" ]; then
+          echo "Expected jar not found: $JAR"
+          exit 1
+        fi
+
+        jq -n \
+          --arg name "GooseSync $VERSION" \
+          --arg version_number "$VERSION" \
+          --arg project_id "$MODRINTH_PROJECT_ID" \
+          --rawfile changelog RELEASE_CHANGELOG.md \
+          '{
+            name: $name,
+            version_number: $version_number,
+            changelog: $changelog,
+            version_type: "release",
+            loaders: ["spigot", "paper", "purpur"],
+            game_versions: ["1.16", "1.16.1", "1.16.2", "1.16.3", "1.16.4", "1.16.5", "1.17", "1.17.1", "1.18", "1.18.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1", "1.21.2"],
+            featured: false,
+            status: "listed",
+            project_id: $project_id,
+            file_parts: ["primary"],
+            primary_file: "primary"
+          }' > modrinth-version.json
+
+        curl --fail-with-body \
+          -H "Authorization: $MODRINTH_TOKEN" \
+          -H "User-Agent: GooseSync GitHub Actions" \
+          -F "data=@modrinth-version.json;type=application/json" \
+          -F "primary=@${JAR};type=application/java-archive" \
+          https://api.modrinth.com/v2/version
