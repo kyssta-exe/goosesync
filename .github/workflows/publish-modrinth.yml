@@ -90,6 +90,7 @@ jobs:
               featured: false,
               status: "listed",
               project_id: $project_id,
+              dependencies: [],
               file_parts: ["primary"],
               primary_file: "primary"
             }' > modrinth-version.json
