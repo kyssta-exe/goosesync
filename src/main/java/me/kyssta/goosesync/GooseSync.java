@@ -101,18 +101,37 @@ public class GooseSync extends JavaPlugin {
      * Check if the current server version is supported
      */
     private boolean isVersionSupported() {
+        // First, check if we're running on Paper
+        if (isPaper()) {
+            // Paper only supports recent MC versions, assume 1.16+ is supported
+            return true;
+        }
+
+        // Not Paper, use standard version check
         try {
-            // Parse version (e.g., "1_16_R3" -> 16)
             String[] parts = serverVersion.split("_");
             if (parts.length >= 2) {
-                int majorVersion = Integer.parseInt(parts[1]);
-                return majorVersion >= 16; // Support 1.16+
+                int majorVersion = Integer.parseInt(parts[0]);
+                int minorVersion = Integer.parseInt(parts[1]);
+                return minorVersion >= 16; // Support 1.16+
             }
         } catch (NumberFormatException e) {
-            getLogger().warning("Could not parse server version: " + serverVersion + ", assuming compatibility");
+            // If we can't parse, assume compatibility
         }
-        // If we can't parse the version, assume it's compatible (better safe than sorry)
         return true;
+    }
+
+    /**
+     * Check if we're running on Paper
+     */
+    private boolean isPaper() {
+        try {
+            // Try to load a Paper-specific class
+            Class.forName("papermc.paper.PlayerHolder");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     /**
