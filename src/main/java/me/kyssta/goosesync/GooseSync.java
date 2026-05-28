@@ -66,7 +66,7 @@ public class GooseSync extends JavaPlugin {
     private String getServerVersion() {
         try {
             String packageName = Bukkit.getServer().getClass().getPackage().getName();
-            String[] parts = packageName.split("\\.");
+            String[] parts = packageName.split("\\\\.");
             
             // Handle different server implementations
             for (int i = 0; i < parts.length; i++) {
@@ -81,7 +81,7 @@ public class GooseSync extends JavaPlugin {
             String bukkitVersion = Bukkit.getBukkitVersion();
             if (bukkitVersion != null && !bukkitVersion.isEmpty()) {
                 // Extract version from "1.21.5-R0.1-SNAPSHOT" format
-                String[] versionParts = bukkitVersion.split("-")[0].split("\\.");
+                String[] versionParts = bukkitVersion.split("-")[0].split("\\\\.");
                 if (versionParts.length >= 2) {
                     return versionParts[0] + "_" + versionParts[1] + "_R0";
                 }
