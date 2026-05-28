@@ -103,26 +103,21 @@ public class GooseSync extends JavaPlugin {
     private boolean isVersionSupported() {
         // First, check if we're running on Paper
         if (isPaper()) {
-            // For Paper, we need to parse the version differently
-            // Paper version format: {mc_major}_{mc_minor}_{patch}
-            // e.g., 26_1_R0 for MC 1.21.2
+            // For Paper servers, be more permissive with version checking
+            // Paper version numbers typically match MC version numbers
+            // If we see a high version number, assume it's recent enough
             try {
                 String[] parts = serverVersion.split("_");
-                if (parts.length >= 2) {
-                    int mcMajor = Integer.parseInt(parts[0]);
-                    int mcMinor = Integer.parseInt(parts[1]);
-                    
-                    // Paper 26.x = MC 1.20.x
-                    // Paper 27.x = MC 1.21.x
-                    // Paper 28.x = MC 1.22.x (future)
-                    // So: MC major version = Paper major - 6
-                    int minecraftMajor = mcMajor - 6;
-                    
-                    // Support Minecraft 1.16+ (which is Paper 22+)
-                    return minecraftMajor >= 16;
+                if (parts.length >= 1) {
+                    int versionNum = Integer.parseInt(parts[0]);
+                    // If the version number is 20 or higher, assume it's Paper 1.20+ which is definitely 1.16+
+                    // Paper 1.16+ corresponds to MC 1.16+
+                    // Since we're seeing numbers like 26, this is certainly recent
+                    return versionNum >= 16;
                 }
             } catch (NumberFormatException e) {
-                // If we can't parse, assume compatibility for Paper
+                // If we can't parse, but it's Paper, assume it's recent enough
+                // Paper tends to stay current with MC releases
                 return true;
             }
         }
