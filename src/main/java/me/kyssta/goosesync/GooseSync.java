@@ -103,11 +103,31 @@ public class GooseSync extends JavaPlugin {
     private boolean isVersionSupported() {
         // First, check if we're running on Paper
         if (isPaper()) {
-            // Paper only supports recent MC versions, assume 1.16+ is supported
-            return true;
+            // For Paper, we need to parse the version differently
+            // Paper version format: {mc_major}_{mc_minor}_{patch}
+            // e.g., 26_1_R0 for MC 1.21.2
+            try {
+                String[] parts = serverVersion.split("_");
+                if (parts.length >= 2) {
+                    int mcMajor = Integer.parseInt(parts[0]);
+                    int mcMinor = Integer.parseInt(parts[1]);
+                    
+                    // Paper 26.x = MC 1.20.x
+                    // Paper 27.x = MC 1.21.x
+                    // Paper 28.x = MC 1.22.x (future)
+                    // So: MC major version = Paper major - 6
+                    int minecraftMajor = mcMajor - 6;
+                    
+                    // Support Minecraft 1.16+ (which is Paper 22+)
+                    return minecraftMajor >= 16;
+                }
+            } catch (NumberFormatException e) {
+                // If we can't parse, assume compatibility for Paper
+                return true;
+            }
         }
 
-        // Not Paper, use standard version check
+        // Not Paper, use standard version check (for Spigot, etc.)
         try {
             String[] parts = serverVersion.split("_");
             if (parts.length >= 2) {
@@ -121,17 +141,12 @@ public class GooseSync extends JavaPlugin {
         return true;
     }
 
-    /**
-     * Check if we're running on Paper
-     */
-    private boolean isPaper() {
-        try {
-            // Try to load a Paper-specific class
-            Class.forName("papermc.paper.PlayerHolder");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+    /** 
+     * Check if we're running on Paper 
+     */ 
+    private boolean isPaper() { 
+        String name = Bukkit.getName(); 
+        return name != null && name.contains("Paper"); 
     }
 
     /**
