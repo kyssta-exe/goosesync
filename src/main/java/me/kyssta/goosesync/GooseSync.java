@@ -25,7 +25,7 @@ public class GooseSync extends JavaPlugin {
         
         // Check if version is supported
         if (!isVersionSupported()) {
-            getLogger().severe("This version of Minecraft is not supported! Please use version 1.16 or higher.");
+            getLogger().severe("This version of Minecraft is not supported (" + serverVersion + ")! Please use version 1.16 or higher.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -108,12 +108,10 @@ public class GooseSync extends JavaPlugin {
             // If we see a high version number, assume it's recent enough
             try {
                 String[] parts = serverVersion.split("_");
-                if (parts.length >= 1) {
-                    int versionNum = Integer.parseInt(parts[0]);
-                    // If the version number is 20 or higher, assume it's Paper 1.20+ which is definitely 1.16+
-                    // Paper 1.16+ corresponds to MC 1.16+
-                    // Since we're seeing numbers like 26, this is certainly recent
-                    return versionNum >= 16;
+                if (parts.length >= 2) {
+                    // parts[0] = MC major version (always 1), parts[1] = MC minor version (e.g., 21)
+                    int minorVersion = Integer.parseInt(parts[1]);
+                    return minorVersion >= 16;
                 }
             } catch (NumberFormatException e) {
                 // If we can't parse, but it's Paper, assume it's recent enough
