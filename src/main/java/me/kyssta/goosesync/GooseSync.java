@@ -49,7 +49,8 @@ public class GooseSync extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PotionListener(this), this);
 
         // Start ping update task
-        new PingUpdateTask(this).runTaskTimer(this, 20L, 20L);
+        long pingInterval = configManager.getPingUpdateInterval();
+        new PingUpdateTask(this).runTaskTimer(this, pingInterval, pingInterval);
 
         getLogger().info("GooseSync has been enabled successfully!");
         getLogger().info("Compatible with Minecraft versions 1.16 - 1.21.2");

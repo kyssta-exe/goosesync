@@ -1,7 +1,9 @@
 package me.kyssta.goosesync.listener;
 
 import me.kyssta.goosesync.GooseSync;
+import me.kyssta.goosesync.config.ConfigManager;
 import me.kyssta.goosesync.model.PlayerData;
+import me.kyssta.goosesync.util.KnockbackUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,9 +12,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
-import org.bukkit.util.Vector;
 
 public class CombatListener implements Listener {
+    private static final int DAMAGE_WINDOW_TICKS = 20;
+
     private final GooseSync plugin;
 
     public CombatListener(GooseSync plugin) {
@@ -21,47 +24,36 @@ public class CombatListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerVelocity(PlayerVelocityEvent event) {
-        if (!plugin.getConfigManager().isEnabled()) {
+        ConfigManager config = plugin.getConfigManager();
+        if (!config.isEnabled() || !config.isKnockbackEnabled()) {
             return;
         }
 
         Player victim = event.getPlayer();
-        EntityDamageEvent entityDamageEvent = victim.getLastDamageCause();
-        
-        if (entityDamageEvent == null) {
-            return;
-        }
-
-        if (entityDamageEvent.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK
-                || !(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
-            return;
-        }
-
-        Entity attacker = ((EntityDamageByEntityEvent)entityDamageEvent).getDamager();
-        if (!(attacker instanceof Player)) {
-            return;
-        }
-
         PlayerData playerData = plugin.getPlayerDataManager().getOrCreatePlayerData(victim);
-        if (!playerData.shouldCompensate(plugin.getConfigManager().getPingThreshold())) {
+        if (!playerData.shouldCompensate(config.getPingThreshold())) {
             return;
         }
 
-        Integer damageTicks = playerData.getLastDamageTicks();
-        if (!playerData.isWithinTicks(damageTicks, victim.getTicksLived(), 8)) {
+        if (!isRecentPlayerAttack(victim, playerData)) {
             return;
         }
 
-        Vector velocity = event.getVelocity();
-        Double verticalVelocity = playerData.getVerticalVelocity();
-        
-        if (verticalVelocity == null || !playerData.isOnGround(velocity.getY())) {
-            return;
+        event.setVelocity(KnockbackUtil.reduceHorizontal(event.getVelocity(), config.getKnockbackMultiplier()));
+    }
+
+    private boolean isRecentPlayerAttack(Player victim, PlayerData playerData) {
+        EntityDamageEvent damageCause = victim.getLastDamageCause();
+        if (!(damageCause instanceof EntityDamageByEntityEvent)) {
+            return false;
         }
 
-        // Simply stabilize the vertical component while keeping horizontal intact
-        Vector adjustedVelocity = velocity.clone().setY(verticalVelocity);
-        event.setVelocity(adjustedVelocity);
+        Entity damager = ((EntityDamageByEntityEvent) damageCause).getDamager();
+        if (!(damager instanceof Player)) {
+            return false;
+        }
+
+        return playerData.isWithinTicks(playerData.getLastDamageTicks(), victim.getTicksLived(), DAMAGE_WINDOW_TICKS);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -70,18 +62,11 @@ public class CombatListener implements Listener {
             return;
         }
 
-        Entity entity = event.getEntity();
-        Entity damager = event.getDamager();
-        
-        if (!(entity instanceof Player) || !(damager instanceof Player)) {
+        if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player)) {
             return;
         }
-        
-        Player victim = (Player) entity;
 
-        PlayerData victimData = plugin.getPlayerDataManager().getOrCreatePlayerData(victim);
-
-        victimData.setLastDamageTicks(victim.getTicksLived());
-        victimData.setVerticalVelocity(victim.getVelocity().getY());
+        Player victim = (Player) event.getEntity();
+        plugin.getPlayerDataManager().getOrCreatePlayerData(victim).setLastDamageTicks(victim.getTicksLived());
     }
 }

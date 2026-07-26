@@ -20,12 +20,7 @@ public class PlayerDataManager {
     }
 
     public PlayerData getOrCreatePlayerData(Player player) {
-        PlayerData data = playerDataMap.get(player.getUniqueId());
-        if (data == null) {
-            data = new PlayerData(player.getName());
-            playerDataMap.put(player.getUniqueId(), data);
-        }
-        return data;
+        return playerDataMap.computeIfAbsent(player.getUniqueId(), id -> new PlayerData(player.getName()));
     }
 
     public void createPlayerData(Player player) {
@@ -37,7 +32,6 @@ public class PlayerDataManager {
     }
 
     public void updatePlayerPing(Player player) {
-        PlayerData data = getPlayerData(player.getUniqueId());
         getOrCreatePlayerData(player).setPing(VersionUtil.getPing(player));
     }
 

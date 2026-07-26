@@ -1,5 +1,8 @@
 enabled: true
 ping-threshold: 100
+ping-update-interval: 20
+knockback:
+  enabled: false
 knockback-multiplier: 0.8
 consumption:
   enabled: true

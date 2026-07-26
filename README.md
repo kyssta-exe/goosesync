@@ -49,13 +49,13 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 
 1. **Download the Plugin**
    ```bash
-   # Download goosesync-26.1.2.jar from the releases
+   # Download goosesync-26.2.0.jar from the releases
    ```
 
 2. **Install on Your Server**
    ```bash
    # Place the JAR file in your plugins folder
-   cp goosesync-26.1.2.jar /path/to/your/server/plugins/
+   cp goosesync-26.2.0.jar /path/to/your/server/plugins/
    ```
 
 3. **Start Your Server**
@@ -79,6 +79,11 @@ The plugin automatically creates a `plugins/GooseSync/config.yml` file:
 # Main plugin settings
 enabled: true
 ping-threshold: 100
+ping-update-interval: 20
+
+# Knockback compensation (opt-in, off by default to preserve vanilla gameplay)
+knockback:
+  enabled: false
 knockback-multiplier: 0.8
 
 # Consumption settings
@@ -103,6 +108,8 @@ potions:
 |---------|---------|-------------|
 | `enabled` | `true` | Master toggle for the plugin |
 | `ping-threshold` | `100` | Minimum ping (ms) to trigger compensation |
+| `ping-update-interval` | `20` | Ticks between ping samples |
+| `knockback.enabled` | `false` | Toggle knockback compensation (opt-in) |
 | `knockback-multiplier` | `0.8` | Knockback reduction multiplier |
 | `consumption.delay-reduction` | `0.2` | Food consumption speed boost (20%) |
 | `pearl.cooldown-reduction` | `0.2` | Ender pearl cooldown reduction (20%) |
@@ -116,6 +123,8 @@ potions:
 | `/gs` or `/goosesync` | Show plugin information | `goosesync.use` |
 | `/gs help` | Display help menu | `goosesync.use` |
 | `/gs version` | Show version details | `goosesync.use` |
+| `/gs ping` | Show your ping and compensation status | `goosesync.use` |
+| `/gs toggle` | Toggle your own compensation on/off | `goosesync.use` |
 | `/gs status` | Show live config/status | `goosesync.status` |
 
 ### Admin Commands
@@ -130,7 +139,7 @@ potions:
 ║              GooseSync              ║
 ╠══════════════════════════════════════════╣
 ║  A Plugin to fix all the latency issues!  ║
-║  Version: 26.1.2                   ║
+║  Version: 26.2.0                   ║
 ║  Made by Kyssta!                        ║
 ║  Kyssta Network: kyssta.xyz        ║
 ║  Server Version: 1_21_R0           ║
@@ -282,7 +291,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Developed by:** Kyssta  
 **Website:** [kyssta.xyz](https://kyssta.xyz)  
-**Version:** 26.1.2
+**Version:** 26.2.0
 
 ---
 

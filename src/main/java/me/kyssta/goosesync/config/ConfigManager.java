@@ -7,6 +7,8 @@ public class ConfigManager {
     private final GooseSync plugin;
     private boolean enabled;
     private int pingThreshold;
+    private int pingUpdateInterval;
+    private boolean knockbackEnabled;
     private double knockbackMultiplier;
     private boolean consumptionEnabled;
     private double consumptionDelayReduction;
@@ -27,6 +29,8 @@ public class ConfigManager {
         
         this.enabled = config.getBoolean("enabled", true);
         this.pingThreshold = Math.max(0, config.getInt("ping-threshold", 100));
+        this.pingUpdateInterval = Math.max(1, config.getInt("ping-update-interval", 20));
+        this.knockbackEnabled = config.getBoolean("knockback.enabled", false);
         this.knockbackMultiplier = clamp(config.getDouble("knockback-multiplier", 0.8), 0.0, 2.0);
         
         this.consumptionEnabled = config.getBoolean("consumption.enabled", true);
@@ -50,6 +54,14 @@ public class ConfigManager {
 
     public int getPingThreshold() {
         return pingThreshold;
+    }
+
+    public int getPingUpdateInterval() {
+        return pingUpdateInterval;
+    }
+
+    public boolean isKnockbackEnabled() {
+        return knockbackEnabled;
     }
 
     public double getKnockbackMultiplier() {

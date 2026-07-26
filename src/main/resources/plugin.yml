@@ -8,7 +8,7 @@ description: Improves gameplay experience for high-ping players
 commands:
   gs:
     description: Main GooseSync command
-    usage: /<command> [help|version|status|reload]
+    usage: /<command> [help|version|status|ping|toggle|reload]
     aliases: [goosesync]
     permission: goosesync.use
     permission-message: You don't have permission to use this command!

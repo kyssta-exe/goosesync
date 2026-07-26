@@ -7,7 +7,6 @@ public class PlayerData {
     private Integer lastPearlTicks;
     private Integer lastConsumeTicks;
     private Integer lastPotionTicks;
-    private Double verticalVelocity;
     private boolean compensationEnabled;
 
     public PlayerData(String playerName) {
@@ -59,24 +58,12 @@ public class PlayerData {
         this.lastPotionTicks = lastPotionTicks;
     }
 
-    public Double getVerticalVelocity() {
-        return verticalVelocity;
-    }
-
-    public void setVerticalVelocity(Double verticalVelocity) {
-        this.verticalVelocity = verticalVelocity;
-    }
-
     public boolean isCompensationEnabled() {
         return compensationEnabled;
     }
 
     public void setCompensationEnabled(boolean compensationEnabled) {
         this.compensationEnabled = compensationEnabled;
-    }
-
-    public boolean isOnGround(double y) {
-        return Math.abs(y) < 0.005;
     }
 
     public boolean hasElapsed(Integer previousTick, int currentTick, int requiredTicks) {
