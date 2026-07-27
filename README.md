@@ -2,7 +2,7 @@
 
 > **The Ultimate Solution for High-Ping Players on Minecraft Servers**
 
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%201.21.2-brightgreen.svg)](https://www.minecraft.net/)
+[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%2026.2-brightgreen.svg)](https://www.minecraft.net/)
 [![Java Version](https://img.shields.io/badge/Java-8+-orange.svg)](https://adoptium.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
