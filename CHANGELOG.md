@@ -1,5 +1,14 @@
 # Changelog
 
+## 26.3.0
+
+- Target Minecraft 26.3 (Wilderness Bound) by building against spigot-api 26.3-R0.1-SNAPSHOT.
+- Support the new year-based versioning scheme (26.1 - 26.3) alongside legacy 1.16 - 1.21.x.
+- Fix version detection that disabled the plugin on 26.x servers and silently blocked pearl cooldown compensation.
+- Report detected game versions like `26.3` instead of legacy `1_21_R0`-style strings.
+- Compile with Java 17 (modern JDKs can no longer emit Java 8 bytecode); Minecraft 26.x servers run on Java 25.
+- Extend Modrinth game-version list through 26.3.
+
 ## 26.2.0
 
 - Add `/gs ping` so players can view their ping and compensation status.

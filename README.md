@@ -2,8 +2,8 @@
 
 > **The Ultimate Solution for High-Ping Players on Minecraft Servers**
 
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%2026.2-brightgreen.svg)](https://www.minecraft.net/)
-[![Java Version](https://img.shields.io/badge/Java-8+-orange.svg)](https://adoptium.net/)
+[![Minecraft Version](https://img.shields.io/badge/Minecraft-1.16%20--%2026.3-brightgreen.svg)](https://www.minecraft.net/)
+[![Java Version](https://img.shields.io/badge/Java-17+-orange.svg)](https://adoptium.net/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## 🌟 Overview
@@ -41,21 +41,21 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 ## 🚀 Installation
 
 ### Prerequisites
-- **Minecraft Server**: 1.16.x - 1.21.2 (Spigot, Paper, Purpur, or any Bukkit-based server)
-- **Java**: Version 8 or higher (Java 17+ recommended for optimal performance)
+- **Minecraft Server**: 1.16.x - 26.3 (Spigot, Paper, Purpur, or any Bukkit-based server)
+- **Java**: Version 17 or higher (Minecraft 26.x servers require Java 25)
 - **Permissions**: Server restart capability
 
 ### Quick Installation Guide
 
 1. **Download the Plugin**
    ```bash
-   # Download goosesync-26.2.0.jar from the releases
+   # Download goosesync-26.3.0.jar from the releases
    ```
 
 2. **Install on Your Server**
    ```bash
    # Place the JAR file in your plugins folder
-   cp goosesync-26.2.0.jar /path/to/your/server/plugins/
+   cp goosesync-26.3.0.jar /path/to/your/server/plugins/
    ```
 
 3. **Start Your Server**
@@ -67,7 +67,7 @@ GooseSync is a revolutionary Minecraft plugin designed to eliminate the frustrat
 4. **Verify Installation**
    ```
    [INFO] GooseSync has been enabled successfully!
-   [INFO] Compatible with Minecraft versions 1.16 - 1.21.2
+   [INFO] Compatible with Minecraft versions 1.16 - 26.3
    ```
 
 ## ⚙️ Configuration
@@ -139,10 +139,10 @@ potions:
 ║              GooseSync              ║
 ╠══════════════════════════════════════════╣
 ║  A Plugin to fix all the latency issues!  ║
-║  Version: 26.2.0                   ║
+║  Version: 26.3.0                   ║
 ║  Made by Kyssta!                        ║
 ║  Kyssta Network: kyssta.xyz        ║
-║  Server Version: 1_21_R0           ║
+║  Server Version: 26.3           ║
 ╚══════════════════════════════════════════╝
 ```
 
@@ -196,7 +196,9 @@ permissions:
 | 1.18.x | ✅ Full Support | Performance optimizations |
 | 1.19.x | ✅ Full Support | All features |
 | 1.20.x | ✅ Full Support | New combat system |
-| 1.21 - 1.21.2 | ✅ Full Support | Latest optimizations |
+| 1.21 - 1.21.11 | ✅ Full Support | Latest optimizations |
+| 26.1 - 26.2 | ✅ Full Support | New versioning scheme |
+| 26.3 | ✅ Full Support | Wilderness Bound support |
 
 ## 🛠️ Troubleshooting
 
@@ -206,7 +208,7 @@ permissions:
 ```
 [ERROR] Error occurred while enabling GooseSync
 ```
-**Solution**: Ensure you're using Java 8+ and a supported Minecraft version (1.16+)
+**Solution**: Ensure you're using Java 17+ and a supported Minecraft version (1.16+ or 26.x)
 
 **Commands not working:**
 ```
@@ -216,7 +218,7 @@ Unknown command. Type /help for help.
 
 **No compensation effects:**
 ```
-[INFO] Detected server version: 1_21_R0
+[INFO] Detected server version: 26.3
 ```
 **Solution**: Check if player ping is above the threshold (default: 100ms)
 
@@ -232,8 +234,8 @@ debug: true
 The plugin provides detailed logging:
 ```
 [INFO] GooseSync has been enabled successfully!
-[INFO] Compatible with Minecraft versions 1.16 - 1.21.2
-[INFO] Detected server version: 1_21_R0
+[INFO] Compatible with Minecraft versions 1.16 - 26.3
+[INFO] Detected server version: 26.3
 ```
 
 ### Performance Monitoring
@@ -258,7 +260,7 @@ Monitor plugin performance through:
 ## 💡 Best Practices
 
 ### Server Configuration
-- **Java Version**: Use Java 17+ for optimal performance
+- **Java Version**: Use Java 17+ (Java 25 for Minecraft 26.x servers)
 - **Server Software**: Paper or Purpur recommended
 - **Memory**: Ensure adequate RAM allocation
 
@@ -291,7 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Developed by:** Kyssta  
 **Website:** [kyssta.xyz](https://kyssta.xyz)  
-**Version:** 26.2.0
+**Version:** 26.3.0
 
 ---
 

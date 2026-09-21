@@ -18,18 +18,18 @@ public class GooseSync extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        
+
         // Get server version for compatibility
         this.serverVersion = getServerVersion();
         getLogger().info("Detected server version: " + serverVersion);
-        
+
         // Check if version is supported
         if (!isVersionSupported()) {
-            getLogger().severe("This version of Minecraft is not supported (" + serverVersion + ")! Please use version 1.16 or higher.");
+            getLogger().severe("This version of Minecraft is not supported (" + serverVersion + ")! Please use Minecraft 1.16 - 1.21.x or 26.x.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
+
         // Initialize managers
         this.configManager = new ConfigManager(this);
         this.playerDataManager = new PlayerDataManager();
@@ -53,7 +53,7 @@ public class GooseSync extends JavaPlugin {
         new PingUpdateTask(this).runTaskTimer(this, pingInterval, pingInterval);
 
         getLogger().info("GooseSync has been enabled successfully!");
-        getLogger().info("Compatible with Minecraft versions 1.16 - 1.21.2");
+        getLogger().info("Compatible with Minecraft versions 1.16 - 26.3");
     }
 
     @Override
@@ -62,39 +62,57 @@ public class GooseSync extends JavaPlugin {
     }
 
     /**
-     * Get the server version string
+     * Get the server's game version, e.g. "26.3" or "1.21.2"
      */
     private String getServerVersion() {
+        // Primary: Bukkit.getBukkitVersion() reports the game version,
+        // e.g. "26.3-R0.1-SNAPSHOT"
         try {
-            String packageName = Bukkit.getServer().getClass().getPackage().getName();
-            String[] parts = packageName.split("\\\\.");
-            
-            // Handle different server implementations
-            for (int i = 0; i < parts.length; i++) {
-                String part = parts[i];
-                if (part.startsWith("v") && part.length() > 1) {
-                    // Found version part (e.g., "v1_16_R3")
-                    return part.substring(1); // Remove 'v' prefix
-                }
-            }
-            
-            // Fallback: try to get version from Bukkit.getBukkitVersion()
             String bukkitVersion = Bukkit.getBukkitVersion();
             if (bukkitVersion != null && !bukkitVersion.isEmpty()) {
-                // Extract version from "1.21.5-R0.1-SNAPSHOT" format
-                String[] versionParts = bukkitVersion.split("-")[0].split("\\\\.");
-                if (versionParts.length >= 2) {
-                    return versionParts[0] + "_" + versionParts[1] + "_R0";
+                String gameVersion = bukkitVersion.split("-")[0].trim();
+                if (!gameVersion.isEmpty()) {
+                    return gameVersion;
                 }
             }
-            
-            // If all else fails, assume it's a supported version
-            getLogger().warning("Could not detect server version, assuming compatibility");
-            return "1_21_R0"; // Default to latest supported version
-            
+        } catch (Exception e) {
+            getLogger().warning("Could not read Bukkit version: " + e.getMessage());
+        }
+
+        // Fallback: legacy versioned CraftBukkit packages, e.g. v1_21_R3
+        try {
+            String packageName = Bukkit.getServer().getClass().getPackage().getName();
+            for (String part : packageName.split("\\.")) {
+                if (part.startsWith("v") && part.length() > 1 && Character.isDigit(part.charAt(1))) {
+                    return part.substring(1).replace('_', '.');
+                }
+            }
         } catch (Exception e) {
             getLogger().warning("Error detecting server version: " + e.getMessage());
-            return "1_21_R0"; // Default to latest supported version
+        }
+
+        // If all else fails, assume it's a supported version
+        getLogger().warning("Could not detect server version, assuming compatibility");
+        return "26.3"; // Default to latest supported version
+    }
+
+    /**
+     * Parse a game version string into {major, minor}, e.g. "26.3" -> {26, 3},
+     * "1.21.2" -> {1, 21}, "26_3-R0.1" -> {26, 3}. Returns null if unparseable.
+     */
+    private int[] parseGameVersion(String version) {
+        if (version == null || version.isEmpty()) {
+            return null;
+        }
+        try {
+            String[] parts = version.split("[-_]");
+            String[] numbers = parts[0].split("\\.");
+            if (numbers.length < 2) {
+                return null;
+            }
+            return new int[] { Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]) };
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
@@ -102,45 +120,18 @@ public class GooseSync extends JavaPlugin {
      * Check if the current server version is supported
      */
     private boolean isVersionSupported() {
-        // First, check if we're running on Paper
-        if (isPaper()) {
-            // For Paper servers, be more permissive with version checking
-            // Paper version numbers typically match MC version numbers
-            // If we see a high version number, assume it's recent enough
-            try {
-                String[] parts = serverVersion.split("_");
-                if (parts.length >= 2) {
-                    // parts[0] = MC major version (always 1), parts[1] = MC minor version (e.g., 21)
-                    int minorVersion = Integer.parseInt(parts[1]);
-                    return minorVersion >= 16;
-                }
-            } catch (NumberFormatException e) {
-                // If we can't parse, but it's Paper, assume it's recent enough
-                // Paper tends to stay current with MC releases
-                return true;
-            }
-        }
-
-        // Not Paper, use standard version check (for Spigot, etc.)
-        try {
-            String[] parts = serverVersion.split("_");
-            if (parts.length >= 2) {
-                int majorVersion = Integer.parseInt(parts[0]);
-                int minorVersion = Integer.parseInt(parts[1]);
-                return minorVersion >= 16; // Support 1.16+
-            }
-        } catch (NumberFormatException e) {
+        int[] version = parseGameVersion(serverVersion);
+        if (version == null) {
             // If we can't parse, assume compatibility
+            return true;
         }
-        return true;
-    }
-
-    /** 
-     * Check if we're running on Paper 
-     */ 
-    private boolean isPaper() { 
-        String name = Bukkit.getName(); 
-        return name != null && name.contains("Paper"); 
+        int major = version[0];
+        int minor = version[1];
+        // Old scheme: 1.16 - 1.21.x; new scheme: 26.x and later
+        if (major == 1) {
+            return minor >= 16;
+        }
+        return major >= 26;
     }
 
     /**
@@ -154,32 +145,29 @@ public class GooseSync extends JavaPlugin {
      * Check if the server version is 1.17 or higher
      */
     public boolean isVersion117OrHigher() {
-        try {
-            String[] parts = serverVersion.split("_");
-            if (parts.length >= 2) {
-                int majorVersion = Integer.parseInt(parts[1]);
-                return majorVersion >= 17;
-            }
-        } catch (NumberFormatException e) {
-            // Ignore parsing errors, assume newer version
-        }
-        return true; // Assume newer version if we can't parse
+        return isVersionAtLeast(1, 17);
     }
 
     /**
      * Check if the server version is 1.20 or higher
      */
     public boolean isVersion120OrHigher() {
-        try {
-            String[] parts = serverVersion.split("_");
-            if (parts.length >= 2) {
-                int majorVersion = Integer.parseInt(parts[1]);
-                return majorVersion >= 20;
-            }
-        } catch (NumberFormatException e) {
-            // Ignore parsing errors, assume newer version
+        return isVersionAtLeast(1, 20);
+    }
+
+    /**
+     * Compare the detected game version against a minimum major/minor pair.
+     * Works for both schemes: 1.x (1.16 - 1.21.x) and 26.x+.
+     */
+    private boolean isVersionAtLeast(int reqMajor, int reqMinor) {
+        int[] version = parseGameVersion(serverVersion);
+        if (version == null) {
+            return true; // Assume newer version if we can't parse
         }
-        return true; // Assume newer version if we can't parse
+        if (version[0] == reqMajor) {
+            return version[1] >= reqMinor;
+        }
+        return version[0] > reqMajor;
     }
 
     public static GooseSync getInstance() {
